@@ -1,0 +1,74 @@
+{% extends 'generic/object_create.html' %}
+{% load form_helpers %}
+{% load helpers %}
+{% load static %}
+
+{% block title %}Create 802.1q Template{% endblock %}
+
+{% block form %}
+
+{% csrf_token %}
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>802.1q Template</strong></div>
+            <div class="panel-body">
+                {% render_field form.name %}
+                {% render_field form.description %}
+                {% render_field form.key %}
+                {% render_field form.mode %}
+                {% render_field form.dot1q_untagged %}
+                {% render_field form.dot1q_tagged %}
+            </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Script chargé.');
+
+        // Vérification de la présence de l'élément mode
+        const modeField = document.getElementById('id_mode');
+        console.log('Mode field:', modeField);
+        
+        // Vérification de l'existence des champs associés
+        const untaggedFieldGroup = document.getElementById('id_dot1q_untagged')?.closest('.form-group');
+        const taggedFieldGroup = document.getElementById('id_dot1q_tagged')?.closest('.form-group');
+        console.log('Untagged field group:', untaggedFieldGroup);
+        console.log('Tagged field group:', taggedFieldGroup);
+
+        // Fonction pour mettre à jour la visibilité des champs
+        function updateFieldVisibility() {
+            const selectedMode = modeField.value || 'default'; // Valeur par défaut si vide
+            console.log('Mode sélectionné:', selectedMode);
+
+            // Gestion de l'affichage pour dot1q_untagged
+            if (selectedMode === 'default' || selectedMode === 'tagged-all') {
+                untaggedFieldGroup.style.display = 'none'; // Masquer
+                console.log('Untagged field masqué.');
+            } else {
+                untaggedFieldGroup.style.display = ''; // Afficher
+                console.log('Untagged field affiché.');
+            }
+
+            // Gestion de l'affichage pour dot1q_tagged
+            if (selectedMode === 'default' || selectedMode === 'access') {
+                taggedFieldGroup.style.display = 'none'; // Masquer
+                console.log('Tagged field masqué.');
+            } else {
+                taggedFieldGroup.style.display = ''; // Afficher
+                console.log('Tagged field affiché.');
+            }
+        }
+
+        // Écouteur d'événement pour Select2
+        $(modeField).on('select2:select', function (e) {
+            console.log('Changement détecté via Select2');
+            updateFieldVisibility();  // Appeler la fonction pour mettre à jour les champs
+        });
+
+        // Initialiser l'état des champs au chargement
+        updateFieldVisibility();
+    });
+</script>
+{% endblock javascript %}

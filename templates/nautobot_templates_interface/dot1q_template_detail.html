@@ -1,0 +1,31 @@
+{% extends 'generic/object_detail.html' %}
+{% load form_helpers %}
+{% load helpers %}
+{% load static %}
+
+{% block content %}
+  <h1>Details for {{ dot1q_template.name }}</h1>
+
+  <p><strong>Name:</strong> {{ dot1q_template.name }}</p>
+  <p><strong>Key:</strong> {{ dot1q_template.key }}</p>
+  <p><strong>Description:</strong> {{ dot1q_template.description }}</p>
+  <p><strong>Mode:</strong> {{ dot1q_template.mode }}</p>
+
+  <h3>Untagged VLAN</h3>
+  {% if dot1q_template.dot1q_untagged %}
+    <p>{{ dot1q_template.dot1q_untagged.name }}</p>
+  {% else %}
+    <p>No Untagged VLAN</p>
+  {% endif %}
+
+  <h3>Tagged VLANs</h3>
+  {% if dot1q_template.dot1q_tagged.all %}
+    <ul>
+      {% for vlan in dot1q_template.dot1q_tagged.all %}
+        <li>{{ vlan.name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No Tagged VLANs</p>
+  {% endif %}
+{% endblock %}
